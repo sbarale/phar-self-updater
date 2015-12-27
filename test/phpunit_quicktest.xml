@@ -21,9 +21,6 @@
         <testsuite name="Unit-Tests">
             <directory>unit</directory>
         </testsuite>
-        <!--<testsuite name="Integration-Tests">-->
-            <!--<directory>integration</directory>-->
-        <!--</testsuite>-->
     </testsuites>
 
     <filter>
@@ -31,9 +28,6 @@
                 addUncoveredFilesFromWhitelist="true"
                 processUncoveredFilesFromWhitelist="true">
             <directory>../src</directory>
-            <exclude>
-                <directory>../src/*/Bundle/*Bundle/Resources</directory>
-            </exclude>
         </whitelist>
     </filter>
 </phpunit>

@@ -1,18 +1,42 @@
 <?php
 /**
- * @package: orchestra-
+ * @package: marx/php-self-updater
  *
  * @author:  msiebeneicher
  * @since:   2015-12-27
  *
- * @link:    http://
  */
 
 
 namespace PSU\HttpClient\Adapter;
 
 
-class GuzzlApapter
-{
+use GuzzleHttp\ClientInterface;
+use PSU\HttpClient\HttpClientInterface;
 
+class GuzzlApapter implements HttpClientInterface
+{
+    /**
+     * @var ClientInterface
+     */
+    private $guzzlClient;
+
+    /**
+     * @param ClientInterface $guzzlClient
+     */
+    public function __construct(
+        ClientInterface $guzzlClient
+    )
+    {
+        $this->guzzlClient = $guzzlClient;
+    }
+
+    /**
+     * @param $url
+     * @return \GuzzleHttp\Message\ResponseInterface
+     */
+    public function get($url)
+    {
+        return $this->guzzlClient->get($url);
+    }
 }

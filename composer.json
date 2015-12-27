@@ -1,8 +1,8 @@
 {
-  "name": "chapi/chapi-client",
-  "description": "chronos console client - Manage your jobs like a git repository",
-  "keywords": ["chronos", "api", "mesos"],
-  "type": "project",
+  "name": "marx/phar-self-updater",
+  "description": "Library for phar self updates by github",
+  "keywords": ["phar", "update"],
+  "type": "library",
   "authors": [
     {
       "name": "Marc Siebeneicher",
@@ -14,34 +14,18 @@
   "require": {
     "php": ">=5.4.0",
 
-    "symfony/console": "~2.7.3",
-    "symfony/dependency-injection": "~2.7.3",
-    "symfony/yaml": "~2.7.3",
-    "symfony/filesystem": "~2.7.3",
-    "symfony/config": "~2.7.3",
-    "symfony/monolog-bridge": "~2.7.3",
-    "symfony/event-dispatcher": "~2.7.3",
-
-    "doctrine/cache": "~1.4",
-    "guzzlehttp/guzzle": "~5.3",
-    "psr/log": "~1.0",
-    "webmozart/glob": "~3.1",
-    "padraic/phar-updater": "~1.0"
-
+    "symfony/finder": "~2.7",
+    "guzzlehttp/guzzle": "~5.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.8",
-    "mikey179/vfsStream": "~1.5"
+    "phpunit/phpunit": "~4.8"
   },
   "autoload":
   {
     "psr-4": {
-      "Chapi\\": ["src/"],
-      "ChapiTest\\": ["test/"]
-    },
-    "classmap": [
-      "src/vendor/class.Diff.php"
-    ]
+      "PSU\\": ["src/"],
+      "PSUTest\\": ["test/"]
+    }
   },
   "config": {
     "bin-dir": "bin"

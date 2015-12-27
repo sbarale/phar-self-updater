@@ -1,9 +1,7 @@
 filter:
     excluded_paths:
-        - 'app/*'
         - 'bin/*'
         - 'test/*'
-        - 'src/vendor/*'
 checks:
     php:
         code_rating: true
