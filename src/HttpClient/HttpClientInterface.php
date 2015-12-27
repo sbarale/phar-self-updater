@@ -13,5 +13,15 @@ namespace PSU\HttpClient;
 
 interface HttpClientInterface
 {
-    public function get($url);
+    /**
+     * @param string $url
+     * @return array
+     */
+    public function getJsonResponse($url);
+
+    /**
+     * @param $url
+     * @return string
+     */
+    public function download($url);
 }

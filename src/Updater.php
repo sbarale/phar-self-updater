@@ -80,4 +80,26 @@ class Updater
     {
         return (-1 == version_compare($localVersion, $this->getLatestReleaseVersion()));
     }
+
+    /**
+     * @throws StrategyException
+     */
+    public function downloadLatestVersion()
+    {
+        $download = $this->getStrategy()->downloadLatestVersion();
+        // ...
+        return $download;
+    }
+
+    /**
+     *
+     */
+    public function updateToLatestVersion()
+    {
+        //$this->downloadLatestVersion();
+        // move current phar as rollback
+        // move tmp file to current phar
+
+        // return result
+    }
 }

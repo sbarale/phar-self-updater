@@ -20,4 +20,6 @@ interface StrategyInterface
     public function downloadLatestVersion();
 
     public function setStability($stability);
+
+    public function setPharFile($pharFileName);
 }

@@ -7,9 +7,7 @@
  *
  */
 
-
 namespace PSU\Strategy;
-
 
 use PSU\Exception\StrategyException;
 use PSU\HttpClient\HttpClientFactory;
@@ -17,8 +15,7 @@ use PSU\HttpClient\HttpClientFactory;
 class GithubStrategy implements StrategyInterface
 {
     // https://api.github.com/repos/msiebeneicher/chapi/releases/latest
-    const API_URL = '%s://api.github.com/repos/%s/%s/releases/latest';
-    const API_PROTOCOL = 'http';
+    const API_URL = 'https://api.github.com/repos/%s/%s/releases/latest';
 
     /**
      * @var int
@@ -36,9 +33,19 @@ class GithubStrategy implements StrategyInterface
     private $githubRepo = '';
 
     /**
+     * @var string
+     */
+    private $pharFile = '';
+
+    /**
      * @var HttpClientFactory
      */
     private $httpClientFactory;
+
+    /**
+     * @var array
+     */
+    private $lastResponse = [];
 
     /**
      * @param HttpClientFactory $httpClientFactory
@@ -50,17 +57,33 @@ class GithubStrategy implements StrategyInterface
         $this->httpClientFactory = $httpClientFactory;
     }
 
+    /**
+     * @return string
+     * @throws StrategyException
+     */
     public function getLatestVersion()
     {
-        var_dump(
-            $this->getHttpClient()->get($this->getApiCallUrl())
-        );
+        $jsonResponse = $this->getReleaseInfo();
+
+        if (StrategyInterface::STABILITY_STABLE == $this->stability && true == $jsonResponse['prerelease'])
+        {
+            //todo : get latest stable release
+            return '0.0.0';
+        }
+
+        return (isset($jsonResponse['tag_name']))
+            ? str_replace('v', '', $jsonResponse['tag_name'])
+            : '0.0.0';
     }
 
+    /**
+     *
+     */
     public function downloadLatestVersion()
     {
-        // TODO: Implement downloadLatestVersion() method.
-        die(__METHOD__);
+        return $this->getHttpClient()->download(
+            $this->getPharDownloadUrl()
+        );
     }
 
     /**
@@ -69,6 +92,14 @@ class GithubStrategy implements StrategyInterface
     public function setStability($stability)
     {
         $this->stability = $stability;
+    }
+
+    /**
+     * @param $pharFileName
+     */
+    public function setPharFile($pharFileName)
+    {
+        $this->pharFile = $pharFileName;
     }
 
     /**
@@ -95,6 +126,10 @@ class GithubStrategy implements StrategyInterface
         return $this->httpClientFactory->getHttpClient();
     }
 
+    /**
+     * @return string
+     * @throws StrategyException
+     */
     private function getApiCallUrl()
     {
         if (empty($this->githubOwner) || empty($this->githubRepo))
@@ -107,9 +142,42 @@ class GithubStrategy implements StrategyInterface
 
         return sprintf(
             self::API_URL,
-            self::API_PROTOCOL,
             $this->githubOwner,
             $this->githubRepo
         );
+    }
+
+    /**
+     * @return array
+     * @throws StrategyException
+     */
+    private function getReleaseInfo()
+    {
+        if (!empty($this->lastResponse))
+        {
+            return $this->lastResponse;
+        }
+
+        return $this->lastResponse = $this->getHttpClient()->getJsonResponse(
+            $this->getApiCallUrl()
+        );
+    }
+
+    /**
+     * @return string
+     */
+    private function getPharDownloadUrl()
+    {
+        $jsonResponse = $this->getReleaseInfo();
+
+        foreach ($jsonResponse['assets'] as $asset)
+        {
+            if ($asset['name'] == $this->pharFile) //todo: add correct filter
+            {
+                return $asset['browser_download_url'];
+            }
+        }
+
+        return '';
     }
 }
