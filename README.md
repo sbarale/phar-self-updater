@@ -1,4 +1,4 @@
-# phar-self-updater
+# phar-self-updater [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/msiebeneicher/phar-self-updater/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/msiebeneicher/phar-self-updater/?branch=master)
 `phar-self-updater` is a small library to handle a self update for your phar application by the github api.
 
 
