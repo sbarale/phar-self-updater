@@ -32,7 +32,7 @@ class GuzzlApapter implements HttpClientInterface
 
     /**
      * @param $url
-     * @return \GuzzleHttp\Message\ResponseInterface
+     * @return array
      * @throws HttpClientException
      */
     public function getJsonResponse($url)

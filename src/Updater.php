@@ -7,7 +7,6 @@
  *
  */
 
-
 namespace PSU;
 
 use PSU\Exception\StrategyException;
@@ -31,6 +30,33 @@ class Updater
     private $strategy;
 
     /**
+     * @var string
+     */
+    private $pharFile = '';
+
+    /**
+     * @var string
+     */
+    private $homeDir = '';
+
+    /**
+     * @param string $pharFile
+     * @param string $homeDir
+     */
+    public function __construct($pharFile, $homeDir)
+    {
+        if (!is_dir($homeDir))
+        {
+            throw new \InvalidArgumentException(
+                sprintf('Can\'t find directory "%s"', $homeDir)
+            );
+        }
+
+        $this->pharFile = $pharFile;
+        $this->homeDir = $homeDir;
+    }
+
+    /**
      * @param StrategyInterface $strategy
      */
     public function setStrategy(StrategyInterface $strategy)
@@ -50,9 +76,13 @@ class Updater
 
         if (self::STRATEGY_GITHUB_API == $this->defaultStrategy)
         {
-            return $this->strategy = new GithubStrategy(
+            $this->strategy = new GithubStrategy(
                 new HttpClientFactory()
             );
+
+            $this->strategy->setPharFile($this->pharFile);
+
+            return $this->strategy;
         }
 
         throw new StrategyException(
@@ -65,7 +95,8 @@ class Updater
     }
 
     /**
-     *
+     * @return string
+     * @throws StrategyException
      */
     public function getLatestReleaseVersion()
     {

@@ -14,7 +14,6 @@ use PSU\HttpClient\HttpClientFactory;
 
 class GithubStrategy implements StrategyInterface
 {
-    // https://api.github.com/repos/msiebeneicher/chapi/releases/latest
     const API_URL = 'https://api.github.com/repos/%s/%s/releases/latest';
 
     /**
@@ -65,7 +64,11 @@ class GithubStrategy implements StrategyInterface
     {
         $jsonResponse = $this->getReleaseInfo();
 
-        if (StrategyInterface::STABILITY_STABLE == $this->stability && true == $jsonResponse['prerelease'])
+        if (
+            StrategyInterface::STABILITY_STABLE == $this->stability
+            && isset($jsonResponse['prerelease'])
+            && true == $jsonResponse['prerelease']
+        )
         {
             //todo : get latest stable release
             return '0.0.0';
