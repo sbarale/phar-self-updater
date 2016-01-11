@@ -20,7 +20,7 @@ checks:
         optional_parameters_at_the_end: true
         no_goto: true
         naming_conventions:
-            local_variable: '^[_a-z][a-zA-Z0-9]*$'
+            local_variable: '^[a-z][a-zA-Z0-9]*$'
             abstract_class_name: ^Abstract|Factory$
             utility_class_name: 'Utils?$'
             constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$'
