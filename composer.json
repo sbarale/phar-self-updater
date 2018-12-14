@@ -1,12 +1,12 @@
 {
-  "name": "marx/phar-self-updater",
+  "name": "sbarale/phar-self-updater",
   "description": "Library for phar self updates by github",
   "keywords": ["phar", "update"],
   "type": "library",
   "authors": [
     {
-      "name": "Marc Siebeneicher",
-      "email": "marc.siebeneicher@trivago.com",
+      "name": "Sebastian Barale",
+      "email": "sebasinar@gmail.com",
       "role": "developer"
     }
   ],
