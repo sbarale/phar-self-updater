@@ -101,9 +101,10 @@ class GithubStrategy implements StrategyInterface
      */
     public function downloadLatestVersion()
     {
+
         return $this->getHttpClient()->download(
             $this->getPharDownloadUrl(), [
-                'allow_redirects' => false,
+                'allow_redirects' => true,
                 'headers'         => [
                     'User-Agent'    => 'testing/1.0',
                     'Accept'        => 'application/octet-stream',
@@ -191,7 +192,7 @@ class GithubStrategy implements StrategyInterface
     /**
      * @return string
      */
-    private function getPharDownloadUrl()
+    public function getPharDownloadUrl()
     {
         $jsonResponse = $this->getReleaseInfo();
         foreach ($jsonResponse['assets'] as $asset) {
