@@ -23,9 +23,7 @@ class GuzzlApapter implements HttpClientInterface
     /**
      * @param ClientInterface $guzzlClient
      */
-    public function __construct(
-        ClientInterface $guzzlClient
-    )
+    public function __construct(ClientInterface $guzzlClient)
     {
         $this->guzzlClient = $guzzlClient;
     }
@@ -35,12 +33,11 @@ class GuzzlApapter implements HttpClientInterface
      * @return array
      * @throws HttpClientException
      */
-    public function getJsonResponse($url)
+    public function getJsonResponse($url, $options = [])
     {
-        $response = $this->guzzlClient->get($url);
-        if (200 == $response->getStatusCode())
-        {
-            return $response->json();
+        $response = $this->guzzlClient->get($url, $options);
+        if (200 == $response->getStatusCode()) {
+            return $response->json()[0];
         }
 
         throw new HttpClientException(
@@ -56,14 +53,16 @@ class GuzzlApapter implements HttpClientInterface
      * @return string
      * @throws HttpClientException
      */
-    public function download($url)
+    public function download($url, $options = [])
     {
-        $response = $this->guzzlClient->get($url);
+        $response = $this->guzzlClient->get($url, $options);
 
-        if (200 == $response->getStatusCode())
-        {
+        if (200 == $response->getStatusCode()) {
             $body = $response->getBody();
             return $this->saveBodyAsFile($body);
+        } elseif (302 == $response->getStatusCode()) {
+            $url = $response->getHeader('location');
+            return $this->saveBodyAsFile(file_get_contents($url));
         }
 
         throw new HttpClientException(
@@ -80,11 +79,10 @@ class GuzzlApapter implements HttpClientInterface
      */
     private function saveBodyAsFile($body)
     {
-        $tmpDir = sys_get_temp_dir();
+        $tmpDir  = sys_get_temp_dir();
         $tmpFile = tempnam($tmpDir, 'psu_');
 
-        if (file_put_contents($tmpFile, $body) > 0)
-        {
+        if (file_put_contents($tmpFile, $body) > 0) {
             return $tmpFile;
         }
 

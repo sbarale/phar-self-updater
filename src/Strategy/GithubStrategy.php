@@ -14,7 +14,9 @@ use PSU\HttpClient\HttpClientFactory;
 
 class GithubStrategy implements StrategyInterface
 {
-    const API_URL = 'https://api.github.com/repos/%s/%s/releases/latest';
+    const API_URL = 'https://api.github.com/repos/%s/%s/releases';
+
+    private $token;
 
     /**
      * @var int
@@ -56,6 +58,22 @@ class GithubStrategy implements StrategyInterface
         $this->httpClientFactory = $httpClientFactory;
     }
 
+    protected function getHeaders()
+    {
+        return [
+            'headers' => [
+                'User-Agent'    => 'testing/1.0',
+                'Accept'        => 'application/json',
+                'Authorization' => 'Token ' . $this->token
+            ]
+        ];
+    }
+
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
     /**
      * @return string
      * @throws StrategyException
@@ -68,8 +86,7 @@ class GithubStrategy implements StrategyInterface
             StrategyInterface::STABILITY_STABLE == $this->stability
             && isset($jsonResponse['prerelease'])
             && true == $jsonResponse['prerelease']
-        )
-        {
+        ) {
             //todo : get latest stable release
             return '0.0.0';
         }
@@ -85,7 +102,14 @@ class GithubStrategy implements StrategyInterface
     public function downloadLatestVersion()
     {
         return $this->getHttpClient()->download(
-            $this->getPharDownloadUrl()
+            $this->getPharDownloadUrl(), [
+                'allow_redirects' => false,
+                'headers'         => [
+                    'User-Agent'    => 'testing/1.0',
+                    'Accept'        => 'application/octet-stream',
+                    'Authorization' => 'Token ' . $this->token
+                ]
+            ]
         );
     }
 
@@ -135,8 +159,7 @@ class GithubStrategy implements StrategyInterface
      */
     private function getApiCallUrl()
     {
-        if (empty($this->githubOwner) || empty($this->githubRepo))
-        {
+        if (empty($this->githubOwner) || empty($this->githubRepo)) {
             throw new StrategyException(
                 '"githubOwner" or "githubRepo" is empty. Please set the owner and repository first.',
                 StrategyException::ERROR_MISSING_PARAMETER
@@ -156,13 +179,12 @@ class GithubStrategy implements StrategyInterface
      */
     private function getReleaseInfo()
     {
-        if (!empty($this->lastResponse))
-        {
+        if (!empty($this->lastResponse)) {
             return $this->lastResponse;
         }
 
         return $this->lastResponse = $this->getHttpClient()->getJsonResponse(
-            $this->getApiCallUrl()
+            $this->getApiCallUrl(), $this->getHeaders()
         );
     }
 
@@ -172,12 +194,10 @@ class GithubStrategy implements StrategyInterface
     private function getPharDownloadUrl()
     {
         $jsonResponse = $this->getReleaseInfo();
-
-        foreach ($jsonResponse['assets'] as $asset)
-        {
+        foreach ($jsonResponse['assets'] as $asset) {
             if ($asset['name'] == $this->pharFile) //todo: add correct filter
             {
-                return $asset['browser_download_url'];
+                return $asset['url'];
             }
         }
 

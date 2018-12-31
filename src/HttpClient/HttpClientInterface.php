@@ -17,11 +17,11 @@ interface HttpClientInterface
      * @param string $url
      * @return array
      */
-    public function getJsonResponse($url);
+    public function getJsonResponse($url, $options = []);
 
     /**
      * @param $url
      * @return string
      */
-    public function download($url);
+    public function download($url, $options = []);
 }

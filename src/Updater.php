@@ -62,6 +62,8 @@ class Updater
     public function setStrategy(StrategyInterface $strategy)
     {
         $this->strategy = $strategy;
+        $this->strategy->setPharFile($this->pharFile);
+
     }
 
     /**

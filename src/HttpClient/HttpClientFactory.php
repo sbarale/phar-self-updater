@@ -16,6 +16,13 @@ use PSU\HttpClient\Adapter\GuzzlApapter;
 
 class HttpClientFactory
 {
+    private $options = [];
+
+    public function __construct($options = [])
+    {
+        $this->options = $options;
+    }
+
     /**
      * @var HttpClientInterface
      */
@@ -26,13 +33,10 @@ class HttpClientFactory
      */
     public function getHttpClient()
     {
-        if (self::$httpClient)
-        {
+        if (self::$httpClient) {
             return self::$httpClient;
         }
 
-        return self::$httpClient = new GuzzlApapter(
-            new Client()
-        );
+        return self::$httpClient = new GuzzlApapter(new Client($this->options));
     }
 }
