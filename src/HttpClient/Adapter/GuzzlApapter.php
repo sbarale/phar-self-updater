@@ -37,7 +37,7 @@ class GuzzlApapter implements HttpClientInterface
     {
         $response = $this->guzzlClient->get($url, $options);
         if (200 == $response->getStatusCode()) {
-            return $response->json()[0];
+            return json_decode($response->getBody(),true)[0];
         }
 
         throw new HttpClientException(
