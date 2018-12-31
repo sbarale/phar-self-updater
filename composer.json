@@ -14,8 +14,8 @@
   "require": {
     "php": ">=5.4.0",
 
-    "symfony/finder": "~2.7",
-    "symfony/filesystem": "~2.7",
+    "symfony/finder": "^4.1",
+    "symfony/filesystem": "^4.1",
 
     "psr/http-message": "~1.0",
     "guzzlehttp/guzzle": "*"
