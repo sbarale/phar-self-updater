@@ -35,4 +35,10 @@ interface StrategyInterface
      * @return void
      */
     public function setPharFile($pharFileName);
+
+    /**
+     * @return string
+     */
+    public function getPharDownloadUrl();
+
 }
